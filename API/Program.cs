@@ -1,5 +1,8 @@
 using Amazon;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2;
 using Amazon.Runtime;
+using Amazon.Extensions.NETCore.Setup;
 using API.AutoMapper;
 using DotNetEnv;
 
@@ -33,6 +36,10 @@ internal class Program
         //Register AWS SDK services
         builder.Services.AddSingleton(credentials);
         builder.Services.AddSingleton(awsRegionEndpoint);
+
+        // Add DynamoDB
+        builder.Services.AddAWSService<IAmazonDynamoDB>();
+        builder.Services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
 
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
