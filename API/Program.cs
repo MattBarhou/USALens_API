@@ -1,5 +1,6 @@
 using Amazon;
 using Amazon.Runtime;
+using API.AutoMapper;
 using DotNetEnv;
 
 internal class Program
@@ -7,6 +8,9 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        // Register AutoMapper
+        builder.Services.AddAutoMapper(typeof(MappingProfile));
 
         // Load environment variables from .env file
         Env.Load();
