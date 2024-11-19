@@ -1,6 +1,9 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
+using API.Helpers;
 using API.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using System.Security.Cryptography.X509Certificates;
 
 namespace API.Repositories
 {
@@ -22,9 +25,27 @@ namespace API.Repositories
         }
 
         //Get state by id
-        public async Task<State> GetStateByIdAsync(string id)
+        public async Task<State> GetStateByNameAsync(string stateName)
         {
-            return await _context.LoadAsync<State>(id);
+            if (string.IsNullOrEmpty(stateName))
+            {
+                throw new ArgumentException("StateName must be provided.");
+            }
+
+            //Convert to uppercase
+            var normalizedStateName = Helper.CapitalizeStateName(stateName);
+
+            // Query using the partition key (StateName)
+            var query = new DynamoDBOperationConfig
+            {
+                QueryFilter = new List<ScanCondition>
+                {
+                    new ScanCondition("StateName", ScanOperator.Equal, normalizedStateName)
+                }
+            };
+
+            var results = await _context.QueryAsync<State>(normalizedStateName, query).GetRemainingAsync();
+            return results.FirstOrDefault(); // Return the first matching state or null
         }
 
         //Add a state
@@ -46,13 +67,13 @@ namespace API.Repositories
         }
 
         //Patch a state
-        public async Task<State> PatchStateAsync(string id, JsonPatchDocument<State> patchDocument)
+        public async Task<State> PatchStateAsync(string stateName, JsonPatchDocument<State> patchDocument)
         {
-            var existingState = await GetStateByIdAsync(id);
+            var existingState = await GetStateByNameAsync(stateName);
 
             if (existingState == null)
             {
-                throw new KeyNotFoundException($"State with the ID of {id} was not found");
+                throw new KeyNotFoundException($"State with the ID of {stateName} was not found");
             }
 
             // Apply the patch to the state
@@ -64,9 +85,34 @@ namespace API.Repositories
         }
 
         //Delete a state
-        public async Task<string> DeleteStateAsync(string id)
+        public async Task<string> DeleteStateAsync(string stateName)
         {
-            await _context.DeleteAsync<State>(id);
+            if (string.IsNullOrEmpty(stateName))
+            {
+                throw new ArgumentException("StateName must be provided.");
+            }
+
+            var normalizedState = Helper.CapitalizeStateName(stateName);
+
+            // Query to get the item by StateName
+            var queryConfig = new DynamoDBOperationConfig
+            {
+                QueryFilter = new List<ScanCondition>
+                {
+                    new ScanCondition("StateName", ScanOperator.Equal, normalizedState)
+                }
+            };
+
+            var results = await _context.QueryAsync<State>(normalizedState, queryConfig).GetRemainingAsync();
+
+            var state = results.FirstOrDefault();
+            if (state == null)
+            {
+                throw new KeyNotFoundException($"State with name '{normalizedState}' not found.");
+            }
+
+            // Delete the state using both Partition Key and Sort Key
+            await _context.DeleteAsync<State>(state.StateName, state.Abbreviation);
             return "State Deleted Successfully";
         }
 

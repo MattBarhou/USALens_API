@@ -31,23 +31,28 @@ namespace API.Controllers
         public async Task<ActionResult<List<StateSummaryDTO>>> GetAllStates()
         {
             // Logic to get all states
-
             var states = await _stateRepository.GetStatesAsync();
-            return Ok(states);
+
+            // Use AutoMapper to map the entities to DTOs
+            var stateSummaries = _mapper.Map<List<StateSummaryDTO>>(states);
+
+            return Ok(stateSummaries);
         }
 
         // 2. Get state by id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<StateDetailDTO>> GetStateById(string id)
+        [HttpGet("{stateName}")]
+        public async Task<ActionResult<StateDetailDTO>> GetStateById(string stateName)
         {
             // Logic to get a state by ID
-            var state = await _stateRepository.GetStateByIdAsync(id);
+            var state = await _stateRepository.GetStateByNameAsync(stateName);
 
             // If state is not found, return 404
             if (state == null) return NotFound();
 
+            var stateDetail = _mapper.Map<StateDetailDTO>(state);
+
             // Return the state
-            return Ok(state);
+            return Ok(stateDetail);
         }
 
         // 3. Create a state
@@ -63,7 +68,7 @@ namespace API.Controllers
             var createdState = await _stateRepository.AddStateAsync(stateEntity);
 
             // Return the created state 
-            return CreatedAtAction(nameof(GetStateById), new { id = createdState.StateName }, createdState);
+            return CreatedAtAction(nameof(GetStateById), new { stateName = createdState.StateName }, createdState);
         }
     
         // 4. Fully update a state
@@ -83,10 +88,10 @@ namespace API.Controllers
         }
 
         // 6. Delete a state
-        [HttpDelete("{id}")]
-        public async Task<string> DeleteState(string id)
+        [HttpDelete("{stateName}")]
+        public async Task<string> DeleteState(string stateName)
         {
-        string result = await _stateRepository.DeleteStateAsync(id);
+            string result = await _stateRepository.DeleteStateAsync(stateName);
             return result;
         }
     }

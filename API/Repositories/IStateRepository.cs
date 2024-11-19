@@ -7,7 +7,7 @@ namespace API.Repositories
     {
         Task<IEnumerable<State>> GetStatesAsync();
 
-        Task<State> GetStateByIdAsync(string id);
+        Task<State> GetStateByNameAsync(string stateName);
 
         Task<State> AddStateAsync(State state);
 
@@ -15,6 +15,6 @@ namespace API.Repositories
 
         Task<State> UpdateStateAsync(string id, State state);
 
-        Task<string> DeleteStateAsync(string id);
+        Task<string> DeleteStateAsync(string stateName);
     }
 }
