@@ -50,7 +50,9 @@ internal class Program
         // Register AutoMapper
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-     
+        builder.Services.AddControllers().AddNewtonsoftJson(); // Add Newtonsoft.Json for JSON Patch support
+
+
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

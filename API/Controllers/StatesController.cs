@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.XPath;
 
 namespace API.Controllers
 {
@@ -72,19 +73,62 @@ namespace API.Controllers
         }
     
         // 4. Fully update a state
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateState(string id, [FromBody] StateCreateUpdateDTO updatedState)
+        [HttpPut("{stateName}")]
+        public async Task<IActionResult> UpdateState(string stateName, [FromBody] StateCreateUpdateDTO updatedState)
         {
-            // Logic to update a state by ID
-            return NoContent();
+            // Handle model validation errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if the state exists
+            var existingState = await _stateRepository.GetStateByNameAsync(stateName);
+            if (existingState == null)
+            {
+                return NotFound($"State with name '{stateName}' not found.");
+            }
+
+            // Ensure URL stateName matches the DTO stateName
+            if (!string.Equals(stateName, updatedState.StateName, StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("State name in URL does not match the state name in the body.");
+            }
+
+            // Map the DTO to the existing entity
+            _mapper.Map(updatedState, existingState);
+
+            // Call repository method to update the state
+            await _stateRepository.UpdateStateAsync(existingState);
+
+            // Return the updated state
+            return Ok(existingState);
         }
 
         // 5. Partially update a state
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchState(string id, [FromBody] JsonPatchDocument<StateCreateUpdateDTO> patchDoc)
+        [HttpPatch("{stateName}")]
+        public async Task<IActionResult> PatchState(string stateName, [FromBody] JsonPatchDocument<State> patchDocument)
         {
-            // Logic to partially update a state
-            return NoContent();
+            if (string.IsNullOrEmpty(stateName) || patchDocument == null)
+                return BadRequest("StateName and Patch document must be provided.");
+
+            var existingState = await _stateRepository.GetStateByNameAsync(stateName);
+
+
+            if (existingState == null)
+                return NotFound($"State with name '{stateName}' not found.");
+
+            // Directly apply the patch to the entity
+            patchDocument.ApplyTo(existingState, error => ModelState.AddModelError(error.AffectedObject?.ToString() ?? "Unknown", error.ErrorMessage));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Save the updated state
+            await _stateRepository.UpdateStateAsync(existingState);
+
+
+            return Ok(existingState);
         }
 
         // 6. Delete a state

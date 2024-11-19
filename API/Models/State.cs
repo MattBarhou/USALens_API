@@ -6,10 +6,10 @@ namespace API.Models
     public class State
     {
         [DynamoDBHashKey] // Partition key
-        public string StateName { get; set; }
+        public required string StateName { get; set; }
 
         [DynamoDBRangeKey] // Sort key 
-        public string Abbreviation { get; set; }
+        public required string Abbreviation { get; set; }
 
         [DynamoDBProperty]
         public string Capital { get; set; }

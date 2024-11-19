@@ -11,9 +11,9 @@ namespace API.Repositories
 
         Task<State> AddStateAsync(State state);
 
-        Task<State> PatchStateAsync(string id, JsonPatchDocument<State> patchDocument);
+        Task<State> PatchStateAsync(string stateName, JsonPatchDocument<State> patchDocument);
 
-        Task<State> UpdateStateAsync(string id, State state);
+        Task<State> UpdateStateAsync(State state);
 
         Task<string> DeleteStateAsync(string stateName);
     }

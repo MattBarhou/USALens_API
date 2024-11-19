@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.S3.Model;
 using API.Helpers;
 using API.Models;
 using Microsoft.AspNetCore.JsonPatch;
@@ -20,8 +21,7 @@ namespace API.Repositories
         //Get all states
         public async Task<IEnumerable<State>> GetStatesAsync()
         {
-            var conditions = new List<ScanCondition>();
-            return await _context.ScanAsync<State>(conditions).GetRemainingAsync();
+            return await _context.ScanAsync<State>(new List<ScanCondition>()).GetRemainingAsync();
         }
 
         //Get state by id
@@ -56,10 +56,9 @@ namespace API.Repositories
         }
 
         //Update a state
-        public async Task<State> UpdateStateAsync(string id, State state)
+        public async Task<State> UpdateStateAsync(State state)
         {
-            // get id
-            state.StateName = id;
+            ArgumentNullException.ThrowIfNull(state);
 
             // Save the state
             await _context.SaveAsync(state);
@@ -72,15 +71,12 @@ namespace API.Repositories
             var existingState = await GetStateByNameAsync(stateName);
 
             if (existingState == null)
-            {
-                throw new KeyNotFoundException($"State with the ID of {stateName} was not found");
-            }
+                throw new KeyNotFoundException($"State with the name '{stateName}' was not found.");
 
-            // Apply the patch to the state
             patchDocument.ApplyTo(existingState);
 
-            // Save the patched state
             await _context.SaveAsync(existingState);
+
             return existingState;
         }
 

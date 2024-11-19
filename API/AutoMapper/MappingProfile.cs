@@ -14,8 +14,8 @@ namespace API.AutoMapper
             // Map State entity to StateDetailDTO
             CreateMap<State, StateDetailDTO>();
 
-            // Map StateCreateUpdateDTO to State entity
-            CreateMap<StateCreateUpdateDTO, State>();
+            // Map in both directions
+            CreateMap<State, StateCreateUpdateDTO>().ReverseMap();
         }
     }
 }
