@@ -20,9 +20,6 @@ internal class Program
         var awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
         var awsRegion = Environment.GetEnvironmentVariable("AWS_DEFAULT_REGION");
 
-        Console.WriteLine(awsRegion);
-        Console.WriteLine(awsSecretKey);
-        Console.WriteLine(awsAccessKey);
 
         if (string.IsNullOrEmpty(awsAccessKey) || string.IsNullOrEmpty(awsSecretKey) || string.IsNullOrEmpty(awsRegion))
         {
@@ -47,10 +44,15 @@ internal class Program
         // Register the IStateRepository with its implementation
         builder.Services.AddScoped<IStateRepository, StateRepository>();
 
+        // Register the ILandmarkRepository with its implementation
+        builder.Services.AddScoped<ILandmarkRepository, LandmarkRepository>();
+
         // Register AutoMapper
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
         builder.Services.AddControllers().AddNewtonsoftJson(); // Add Newtonsoft.Json for JSON Patch support
+
+     
 
 
         // Add services to the container.
