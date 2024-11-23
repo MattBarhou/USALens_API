@@ -16,5 +16,8 @@ namespace API.Models
 
         [DynamoDBProperty]
         public string Location { get; set; }
+
+        [DynamoDBProperty]
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -52,6 +52,9 @@ namespace API.Controllers
   
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            // Set CreatedDate to current time
+            landmarkCreateDTO.CreatedAt = DateTime.Now;
+
             var landmark = _mapper.Map<Landmark>(landmarkCreateDTO);
 
             var newLandmark = await _landmarkRepository.AddLandmarkAsync(landmark);

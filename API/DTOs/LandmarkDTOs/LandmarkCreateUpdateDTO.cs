@@ -6,5 +6,6 @@
         public string LandmarkName { get; set; } // Sort Key
         public string Description { get; set; }
         public string Location { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
