@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.JsonPatch;
 
 internal class Program
 {
-    // _client instance
+    // client instance
     public static HttpClient _client = new HttpClient();
-
+    // initialize controllers
+    public static HomeController HomeController = new HomeController(_client);
     public static StatesController StatesController = new StatesController(_client);
 
     private static async Task Main(string[] args)
@@ -25,13 +26,17 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
+        builder.Services.AddHttpClient<StatesController>(client =>
+        {
+            client.BaseAddress = new Uri("https://localhost:7185");
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
@@ -44,7 +49,8 @@ internal class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+            pattern: "{controller=Home}/{action=Index}/{id?}"
+        );
 
         app.Run();
     }
@@ -58,13 +64,14 @@ internal class Program
         // add header json
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        await StatesController.GetAllStates();
-        await StatesController.GetStateById("Tennessee");
+        // TESTING
+        //await StatesController.GetAllStates();
+        //await StatesController.GetStateById("Tennessee");
         //await CreateState();
         //await UpdateState("Lucianna");
         //await DeleteState("Lucianna");
     }
 
-    
+
 
 }

@@ -17,36 +17,33 @@ namespace WebApp.Controllers
 
         public StatesController(HttpClient client)
         {
-            _client = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7185")
-            };
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _client.BaseAddress = new Uri("https://localhost:7185");
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            if (_client == null)
-            {
-                Debug.WriteLine("CLIENT IS NULL.");
-            }
         }
+
 
         public async Task<IActionResult> Index()
         {
             IEnumerable<State> states = new List<State>();
             try
             {
-                await GetAllStates();
+                states = await GetAllStates();
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
+
             return View(states);
         }
 
 
         // GET ALL STATES
-        public async Task GetAllStates()
+        public async Task<IEnumerable<State>> GetAllStates()
         {
+            IEnumerable<State> states = new List<State>();
+
             try
             {
                 string json;
@@ -55,7 +52,7 @@ namespace WebApp.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     json = await response.Content.ReadAsStringAsync();
-                    IEnumerable<State> states = JsonConvert.DeserializeObject<IEnumerable<State>>(json);
+                    states = JsonConvert.DeserializeObject<IEnumerable<State>>(json);
 
                     foreach (State state in states)
                     {
@@ -68,6 +65,8 @@ namespace WebApp.Controllers
             {
                 Debug.WriteLine(e.Message);
             }
+
+            return states;
         }
 
         // GET STATE BY ID

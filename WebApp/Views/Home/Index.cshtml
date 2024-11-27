@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<WebApp.Models.State>
+
+@{
+    ViewData["Title"] = "States";
 }
 
 <div class="text-center">
@@ -17,8 +19,8 @@
 <div class="text-center">
     <h3 class="display-6">List of States </h3>
     <hr />
-    <table id="statesTable">
-        <thead>
+    <table id="statesTable" class="table table-bordered">
+        <thead class="thead-dark">
             <tr>
                 <th class="text-center">State Name</th>
                 <th class="text-center">Abbreviation</th>
@@ -27,6 +29,14 @@
         </thead>
         <tbody>
             <!-- Data rows will be added dynamically -->
+            @foreach (var state in Model)
+            {
+                <tr>
+                    <td>@state.StateName</td>
+                    <td>@state.Abbreviation</td>
+                    <td>@state.Capital</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
