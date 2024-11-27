@@ -52,8 +52,16 @@ internal class Program
 
         builder.Services.AddControllers().AddNewtonsoftJson(); // Add Newtonsoft.Json for JSON Patch support
 
-     
-
+        // **Add CORS services** frontend access port to port
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("https://localhost:7157")  // Allow only the specific origin
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
 
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -62,6 +70,7 @@ internal class Program
 
         var app = builder.Build();
 
+        app.UseCors();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
