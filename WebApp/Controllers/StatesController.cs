@@ -38,6 +38,14 @@ namespace WebApp.Controllers
             return View(states);
         }
 
+        [Route("Home/Details/{stateName}")]
+        public async Task<IActionResult> Details(string stateName)
+        {
+            var state = await GetStateById(stateName);            
+
+            return View(state);
+        }
+
 
         // GET ALL STATES
         public async Task<IEnumerable<State>> GetAllStates()
@@ -54,11 +62,11 @@ namespace WebApp.Controllers
                     json = await response.Content.ReadAsStringAsync();
                     states = JsonConvert.DeserializeObject<IEnumerable<State>>(json);
 
-                    foreach (State state in states)
-                    {
-                        // print each state
-                        Debug.WriteLine(state.StateName);
-                    }
+                    //foreach (State state in states)
+                    //{
+                    //    // print each state
+                    //    Debug.WriteLine(state.StateName);
+                    //}
                 }
             }
             catch (Exception e)
@@ -70,7 +78,7 @@ namespace WebApp.Controllers
         }
 
         // GET STATE BY ID
-        public async Task GetStateById(string stateName)
+        public async Task<State> GetStateById(string stateName)
         {
             try
             {
@@ -81,18 +89,24 @@ namespace WebApp.Controllers
                     state = await response.Content.ReadAsAsync<State>();
 
                     // print the state details 
-                    Debug.WriteLine($"\nSTATE NAME: {stateName} \n" +
+                    Debug.WriteLine(
+                        $"\nSTATE NAME: {stateName} \n" +
                         $"STATE DETAILS:\n"
                         + state.Abbreviation + "\n"
                         + state.Capital + "\n"
                         + state.Population + "\n"
-                        + state.Region + "\n");
+                        + state.Region + "\n"
+                    );
+
+                    return state;
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
+
+            return null;
         }
 
         // POST - CREATE STATE

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\WebApp\Views\Home\Details.cshtml" Link="Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="AWSSDK.Core" Version="3.7.400.52" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.403.2" />
