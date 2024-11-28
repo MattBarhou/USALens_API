@@ -25,6 +25,7 @@
                 <th class="text-center">State Name</th>
                 <th class="text-center">Abbreviation</th>
                 <th class="text-center">Capital</th>
+                <th class="text-center">Details</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,7 @@
                     <td>@state.StateName</td>
                     <td>@state.Abbreviation</td>
                     <td>@state.Capital</td>
+                    <td><a class="nav-link text-blue" asp-route-id="@state.StateName" asp-action="Details">View More</a></td>
                 </tr>
             }
         </tbody>

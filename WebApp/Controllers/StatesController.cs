@@ -56,6 +56,14 @@ namespace WebApp.Controllers
             return View(states ?? new List<State>());
         }
 
+        [Route("Home/Details/{stateName}")]
+        public async Task<IActionResult> Details(string stateName)
+        {
+            var state = await GetStateById(stateName);            
+
+            return View(state);
+        }
+
 
         // GET ALL STATES
         public async Task<IEnumerable<State>> GetAllStates()
@@ -72,11 +80,11 @@ namespace WebApp.Controllers
                     json = await response.Content.ReadAsStringAsync();
                     states = JsonConvert.DeserializeObject<IEnumerable<State>>(json);
 
-                    foreach (State state in states)
-                    {
-                        // print each state
-                        Debug.WriteLine(state.StateName);
-                    }
+                    //foreach (State state in states)
+                    //{
+                    //    // print each state
+                    //    Debug.WriteLine(state.StateName);
+                    //}
                 }
             }
             catch (Exception e)
