@@ -26,7 +26,7 @@ namespace WebApp.Controllers
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-
+        // index view
         public async Task<IActionResult> Index()
         {
             IEnumerable<State> states = new List<State>(); // Initialize to avoid null
@@ -56,6 +56,7 @@ namespace WebApp.Controllers
             return View(states ?? new List<State>());
         }
 
+        // details view
         [Route("Home/Details/{stateName}")]
         public async Task<IActionResult> Details(string stateName)
         {
@@ -64,6 +65,31 @@ namespace WebApp.Controllers
             return View(state);
         }
 
+        // details view
+        [Route("States/EditedDetails")]
+        public async Task<IActionResult> EditedDetails(State state)
+        {
+            return View(state);
+        }
+
+
+        // edit view
+        [Route("States/Edit/{stateName}")]
+        public async Task<IActionResult> Edit(string stateName, [Bind("StateName,Abbreviation,Capital,Population,Area,Region,TimeZones,FlagUrl")] State state)
+        {
+            Debug.WriteLine("ATTEMPT TO EDIT STATE >>>>>>>>>>>>>>>>>>>>>>>" + stateName);
+
+            if (ModelState.IsValid)
+            {
+                await UpdateState(stateName, state);
+                Debug.WriteLine("STATE UPDATED >>>>>>>>>>>>>>>>>>>>>>>" + stateName);
+                return RedirectToAction(nameof(EditedDetails), state);
+            }
+            return View(state);
+        }
+
+
+        /// =====================  SERVICES  ===================== \\\
 
         // GET ALL STATES
         public async Task<IEnumerable<State>> GetAllStates()
@@ -74,17 +100,11 @@ namespace WebApp.Controllers
             {
                 string json;
                 HttpResponseMessage response = await _client.GetAsync("/api/states");
-                Debug.WriteLine("checking response and get all states");
+                //Debug.WriteLine("checking response and get all states");
                 if (response.IsSuccessStatusCode)
                 {
                     json = await response.Content.ReadAsStringAsync();
                     states = JsonConvert.DeserializeObject<IEnumerable<State>>(json);
-
-                    //foreach (State state in states)
-                    //{
-                    //    // print each state
-                    //    Debug.WriteLine(state.StateName);
-                    //}
                 }
             }
             catch (Exception e)
