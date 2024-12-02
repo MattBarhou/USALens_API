@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Amazon.S3.Model;
+using Amazon.DynamoDBv2.Model.Internal.MarshallTransformations;
 
 
 namespace WebApp.Controllers
@@ -22,7 +24,7 @@ namespace WebApp.Controllers
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-
+        // index view
         public async Task<IActionResult> Index()
         {
             IEnumerable<State> states = new List<State>();
@@ -38,6 +40,7 @@ namespace WebApp.Controllers
             return View(states);
         }
 
+        // details view
         [Route("Home/Details/{stateName}")]
         public async Task<IActionResult> Details(string stateName)
         {
@@ -46,6 +49,31 @@ namespace WebApp.Controllers
             return View(state);
         }
 
+        // details view
+        [Route("States/EditedDetails")]
+        public async Task<IActionResult> EditedDetails(State state)
+        {
+            return View(state);
+        }
+
+
+        // edit view
+        [Route("States/Edit/{stateName}")]
+        public async Task<IActionResult> Edit(string stateName, [Bind("StateName,Abbreviation,Capital,Population,Area,Region,TimeZones,FlagUrl")] State state)
+        {
+            Debug.WriteLine("ATTEMPT TO EDIT STATE >>>>>>>>>>>>>>>>>>>>>>>" + stateName);
+
+            if (ModelState.IsValid)
+            {
+                await UpdateState(stateName, state);
+                Debug.WriteLine("STATE UPDATED >>>>>>>>>>>>>>>>>>>>>>>" + stateName);
+                return RedirectToAction(nameof(EditedDetails), state);
+            }
+            return View(state);
+        }
+
+
+        /// =====================  SERVICES  ===================== \\\
 
         // GET ALL STATES
         public async Task<IEnumerable<State>> GetAllStates()
@@ -56,17 +84,11 @@ namespace WebApp.Controllers
             {
                 string json;
                 HttpResponseMessage response = await _client.GetAsync("/api/states");
-                Debug.WriteLine("checking response and get all states");
+                //Debug.WriteLine("checking response and get all states");
                 if (response.IsSuccessStatusCode)
                 {
                     json = await response.Content.ReadAsStringAsync();
                     states = JsonConvert.DeserializeObject<IEnumerable<State>>(json);
-
-                    //foreach (State state in states)
-                    //{
-                    //    // print each state
-                    //    Debug.WriteLine(state.StateName);
-                    //}
                 }
             }
             catch (Exception e)
@@ -87,17 +109,6 @@ namespace WebApp.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     state = await response.Content.ReadAsAsync<State>();
-
-                    // print the state details 
-                    Debug.WriteLine(
-                        $"\nSTATE NAME: {stateName} \n" +
-                        $"STATE DETAILS:\n"
-                        + state.Abbreviation + "\n"
-                        + state.Capital + "\n"
-                        + state.Population + "\n"
-                        + state.Region + "\n"
-                    );
-
                     return state;
                 }
             }
@@ -144,26 +155,31 @@ namespace WebApp.Controllers
         }
 
         // PUT - UPDATE STATE
-        public async Task UpdateState(string stateName)
+        public async Task<State> UpdateState(string stateName, State state)
         {
             string json;
+            // check the exting state obj
+            State existingState = await GetStateById(stateName);
+            if (existingState == null)
+            {
+                Debug.WriteLine("STATE NOT FOUND");
+                return null;
+            }
+
             try
             {
-                // update content
-                State state = new State
-                {
-                    StateName = "Lucianna",
-                    Abbreviation = "FF",
-                    Capital = "lala",
-                    Population = 689757,
-                    Area = 41235,
-                    Region = "South",
-                    TimeZones = new List<string> { "Central" },
-                    FlagUrl = "https://matt-barhou.s3.amazonaws.com/state-flags/TN.png"
-                };
+                // update all fields with new info
+                existingState.StateName = state.StateName;
+                existingState.Abbreviation = state.Abbreviation;
+                existingState.Capital = state.Capital;
+                existingState.Population = state.Population;
+                existingState.Area = state.Area;
+                existingState.Region = state.Region;
+                existingState.TimeZones = state.TimeZones;
+                existingState.FlagUrl = state.FlagUrl;
 
                 HttpResponseMessage response;
-                json = JsonConvert.SerializeObject(state);
+                json = JsonConvert.SerializeObject(existingState);
                 StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
                 //update item
@@ -171,13 +187,14 @@ namespace WebApp.Controllers
                 Debug.WriteLine("STATE UPDATE STATUS: " + response.StatusCode);
                 response.EnsureSuccessStatusCode();
 
-                await GetStateById("Lucianna");
+                return existingState;
 
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
+            return null;
         }
 
         // PATCH - PARTIALLY UPDATE STATE 

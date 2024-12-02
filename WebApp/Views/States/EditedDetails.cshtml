@@ -1,7 +1,7 @@
 ﻿@model WebApp.Models.State
 
 @{
-    ViewData["Title"] = "State Details";
+    ViewData["Title"] = "EditedDetails";
 }
 
 <h3 class="display-6">State Details </h3>
@@ -17,26 +17,26 @@
         </dd>
 
         <dt class="col-sm-2">
-            Abbreviation: 
+            Abbreviation:
         </dt>
         <dd class="col-sm-10">
             @Model.Abbreviation
         </dd>
 
         <dt class="col-sm-2">
-            Capital: 
+            Capital:
         </dt>
         <dd class="col-sm-10">
             @Model.Capital
         </dd>
 
         <dt class="col-sm-2">
-            Population (2022-23): 
+            Population (2022-23):
         </dt>
         <dd class="col-sm-10">
             @Model.Population
         </dd>
-                
+
         <dt class="col-sm-2">
             Total Area:
         </dt>
@@ -45,7 +45,7 @@
         </dd>
 
         <dt class="col-sm-2">
-            Region: 
+            Region:
         </dt>
         <dd class="col-sm-10">
             @Model.Region
@@ -58,14 +58,15 @@
             @foreach (string timeZone in @Model.TimeZones)
             {
                 <p>@timeZone</p>
-            }            
+            }
         </dd>
 
         <dt class="col-sm-2">
-            Flag: 
+            Flag:
         </dt>
         <dd class="col-sm-10">
-            <img src="@Model.FlagUrl" alt="@Model.StateName flag" width="100" height="auto">
+            <img src="@Model.FlagUrl" alt="@Model.StateName flag">
+            @Model.FlagUrl
         </dd>
     </dl>
 </div>
