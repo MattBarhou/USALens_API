@@ -1,0 +1,65 @@
+﻿@model IEnumerable<WebApp.Models.State>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">States of the USA</h1>
+    <hr />
+    <img src="images/usa-map.jpg" alt="Map of the USA">
+</div>
+
+<div class="description">
+    <p>
+        The United States of America (USA) has 50 states. It is the second largest country in North America
+        after Canada (largest) and followed by Mexico (third largest). The U.S. has 50 states, a federal
+        district, and five territories. Here is a list of the 50 states.
+    </p>
+</div>
+
+
+<div class="text-center">
+    <h3 class="display-6">List of States</h3>
+    <hr />
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center">Flag</th>
+                <th class="text-center">State Name</th>
+                <th class="text-center">Abbreviation</th>
+                <th class="text-center">Capital</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var state in Model)
+            {
+                <tr>
+                    <td class="text-center">
+                        <img src="@state.FlagUrl" alt="@state.StateName Flag" width="50">
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-stateName="@state.StateName" class="btn btn-link">
+                            @state.StateName
+                        </a>
+                    </td>
+                    <td class="text-center">@state.Abbreviation</td>
+                    <td class="text-center">@state.Capital</td>
+                    <td class="text-center">
+                        <!-- Trigger Modals -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#patchModal">Patch</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Include Modals -->
+@await Html.PartialAsync("Partials/EditModal", Model.FirstOrDefault())
+@await Html.PartialAsync("Partials/PatchModal", Model.FirstOrDefault())
+@await Html.PartialAsync("Partials/DeleteModal", Model.FirstOrDefault())
+
