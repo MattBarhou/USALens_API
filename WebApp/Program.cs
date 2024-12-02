@@ -25,6 +25,9 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
+        // Register HttpClient for dependency injection
+        builder.Services.AddHttpClient();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -44,7 +47,7 @@ internal class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+            pattern: "{controller=States}/{action=Index}/{id?}");
 
         app.Run();
     }
@@ -59,7 +62,7 @@ internal class Program
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         await StatesController.GetAllStates();
-        await StatesController.GetStateById("Tennessee");
+        //await StatesController.GetStateById("Tennessee");
         //await CreateState();
         //await UpdateState("Lucianna");
         //await DeleteState("Lucianna");

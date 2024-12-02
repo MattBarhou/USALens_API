@@ -1,0 +1,30 @@
+﻿@model WebApp.Models.State
+
+<div class="container mt-4">
+    <h2 class="text-center">State Details</h2>
+    <dl class="row">
+        <dt class="col-sm-4">State Name</dt>
+        <dd class="col-sm-8">@Model.StateName</dd>
+
+        <dt class="col-sm-4">Abbreviation</dt>
+        <dd class="col-sm-8">@Model.Abbreviation</dd>
+
+        <dt class="col-sm-4">Capital</dt>
+        <dd class="col-sm-8">@Model.Capital</dd>
+
+        <dt class="col-sm-4">Population</dt>
+        <dd class="col-sm-8">@Model.Population</dd>
+
+        <dt class="col-sm-4">Area</dt>
+        <dd class="col-sm-8">@Model.Area sq mi</dd>
+
+        <dt class="col-sm-4">Region</dt>
+        <dd class="col-sm-8">@Model.Region</dd>
+
+        <dt class="col-sm-4">Time Zones</dt>
+        <dd class="col-sm-8">@string.Join(", ", Model.TimeZones ?? new List<string>())</dd>
+    </dl>
+    <div class="text-center">
+        <a asp-action="Index" class="btn btn-secondary">Close</a>
+    </div>
+</div>

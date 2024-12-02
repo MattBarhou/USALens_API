@@ -1,0 +1,39 @@
+﻿@model WebApp.Models.State
+
+<div class="modal fade show" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">State Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-4">State Name</dt>
+                    <dd class="col-sm-8">@Model.StateName</dd>
+
+                    <dt class="col-sm-4">Abbreviation</dt>
+                    <dd class="col-sm-8">@Model.Abbreviation</dd>
+
+                    <dt class="col-sm-4">Capital</dt>
+                    <dd class="col-sm-8">@Model.Capital</dd>
+
+                    <dt class="col-sm-4">Population</dt>
+                    <dd class="col-sm-8">@Model.Population</dd>
+
+                    <dt class="col-sm-4">Area</dt>
+                    <dd class="col-sm-8">@Model.Area sq mi</dd>
+
+                    <dt class="col-sm-4">Region</dt>
+                    <dd class="col-sm-8">@Model.Region</dd>
+
+                    <dt class="col-sm-4">Time Zones</dt>
+                    <dd class="col-sm-8">@string.Join(", ", Model.TimeZones ?? new List<string>())</dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
