@@ -6,39 +6,18 @@
 
 <div class="text-center">
     <h1 class="display-4">States of the USA</h1>
-    <hr />
     <img src="images/usa-map.jpg" alt="Map of the USA">
 </div>
-<div class="description">    
+<div class="description">
     <p>
         The United States of America (USA) has 50 states. It is the second largest country in North America
         after Canada (largest) and followed by Mexico (third largest). The U.S. has 50 states, a federal
         district, and five territories. Here is a list of the 50 states.
     </p>
 </div>
-<div class="text-center">
-    <h3 class="display-6">List of States </h3>
-    <hr />
-    <table id="statesTable" class="table table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th class="text-center">State Name</th>
-                <th class="text-center">Abbreviation</th>
-                <th class="text-center">Capital</th>
-                <th class="text-center">Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data rows will be added dynamically -->
-            @foreach (var state in Model)
-            {
-                <tr>
-                    <td>@state.StateName</td>
-                    <td>@state.Abbreviation</td>
-                    <td>@state.Capital</td>
-                    <td><a class="nav-link text-blue" asp-action="Details" asp-route-id="@state.StateName">View More</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+<button >
+    <a asp-area="" asp-controller="States" asp-action="Index">See all States</a>
+</button>
+<button>
+    <a asp-area="" asp-controller="Landmarks" asp-action="Index">Landmarks</a>
+</button>
