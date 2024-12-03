@@ -14,7 +14,6 @@ internal class Program
     public static HttpClient _client = new HttpClient();
     // initialize controllers
     public static HomeController HomeController = new HomeController(_client);
-    public static StatesController StatesController = new StatesController(_client);
 
 
     private static async Task Main(string[] args)

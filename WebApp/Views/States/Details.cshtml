@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h5 class="text-muted">General Information</h5>
-                    <dl class="row">
+    <dl class="row">
                         <dt class="col-sm-5">Name</dt>
                         <dd class="col-sm-7">@Model.StateName</dd>
 
@@ -26,7 +26,7 @@
 
                         <dt class="col-sm-5">Population</dt>
                         <dd class="col-sm-7">@Model.Population</dd>
-
+                
                         <dt class="col-sm-5">Area</dt>
                         <dd class="col-sm-7">@Model.Area sq mi</dd>
 
@@ -35,8 +35,8 @@
 
                         <dt class="col-sm-5">Time Zones</dt>
                         <dd class="col-sm-7">@string.Join(", ", Model.TimeZones ?? new List<string>())</dd>
-                    </dl>
-                </div>
+    </dl>
+</div>
                 <!-- State Flag -->
                 <div class="col-md-6 text-center">
                     <h5 class="text-muted">State Flag</h5>
@@ -52,3 +52,7 @@
         <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Go to Home Page</a>
     </div>
 </div>
+
+@* <p>
+    <a asp-action="Add" class="btn btn-success">Add New State</a>
+</p> *@
