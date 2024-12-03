@@ -27,6 +27,9 @@
                 {
                     foreach (var landmark in Model)
                     {
+                        // Generate a unique modal ID for each landmark
+                        string modalId = $"editModal-{landmark.LandmarkName.Replace(" ", "-")}";
+
                         <tr>
                             <td>
                                 <a asp-action="Details" asp-route-landmarkName="@landmark.LandmarkName" class="btn btn-link text-decoration-none">
@@ -36,17 +39,18 @@
                             <td class="text-center">@landmark.Location</td>
                             <td class="text-center">
                                 <!-- Actions -->
-                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#patchModal">Patch</button>
-                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@modalId">Edit</button>
                             </td>
                         </tr>
+
+                        <!-- Include Edit Modal for this landmark -->
+                        @await Html.PartialAsync("Partials/EditModal", landmark, new ViewDataDictionary(ViewData) { { "ModalId", modalId } })
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="5" class="text-center text-muted">No landmarks available.</td>
+                        <td colspan="3" class="text-center text-muted">No landmarks available.</td>
                     </tr>
                 }
             </tbody>
