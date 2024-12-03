@@ -56,10 +56,6 @@ namespace WebApp.Controllers
             return View(states ?? new List<State>());
         }
 
-
-
-        /// =====================  SERVICES  ===================== \\\
-
         // GET ALL STATES
         public async Task<IEnumerable<State>> GetAllStates()
         {

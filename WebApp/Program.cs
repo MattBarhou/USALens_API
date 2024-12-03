@@ -65,8 +65,8 @@ internal class Program
         await StatesController.GetAllStates();
         //await StatesController.GetStateById("Tennessee");
         //await CreateState();
-        //await UpdateState("Lucianna");
-        //await DeleteState("Lucianna");
+        //await UpdateLandmark("Lucianna");
+        //await DeleteLandmark("Lucianna");
     }
 
 

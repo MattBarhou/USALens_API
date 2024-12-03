@@ -4,20 +4,30 @@
     ViewData["Title"] = "States";
 }
 
-<div class="text-center">
-    <h1 class="display-4">United Estates of America</h1>
-    <img src="images/usa-map.jpg" alt="Map of the USA" width="100" height="auto">
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="text-center mb-4">
+        <h1 class="display-4 fw-bold">United States of America</h1>
+        <p class="lead text-secondary">Explore the land of 50 states, rich in history, culture, and natural beauty.</p>
+        <img src="images/usa-map.jpg" alt="Map of the USA" class="img-fluid shadow-lg rounded mt-3" style="max-width: 600px;">
+    </div>
+
+    <!-- Description Section -->
+    <div class="bg-light p-4 rounded shadow-sm mb-4">
+        <p class="fs-5">
+            The United States of America (USA) is a vast nation with 50 states, a federal district, and five territories.
+            It is the second-largest country in North America, bordered by Canada to the north and Mexico to the south.
+            Here is a detailed exploration of the 50 states and their unique contributions to this great nation.
+        </p>
+    </div>
+
+    <!-- Call-to-Action Buttons -->
+    <div class="text-center">
+        <a asp-area="" asp-controller="States" asp-action="Index" class="btn btn-primary btn-lg me-3">
+            See All States
+        </a>
+        <a asp-area="" asp-controller="Landmarks" asp-action="Index" class="btn btn-secondary btn-lg">
+            Explore Landmarks
+        </a>
+    </div>
 </div>
-<div class="description">
-    <p>
-        The United States of America (USA) has 50 states. It is the second largest country in North America
-        after Canada (largest) and followed by Mexico (third largest). The U.S. has 50 states, a federal
-        district, and five territories. Here is a list of the 50 states.
-    </p>
-</div>
-<button >
-    <a asp-area="" asp-controller="States" asp-action="Index">See all States</a>
-</button>
-<button>
-    <a asp-area="" asp-controller="Landmarks" asp-action="Index">Landmarks</a>
-</button>
