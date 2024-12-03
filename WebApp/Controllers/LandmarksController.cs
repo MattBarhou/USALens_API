@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Text;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -24,16 +26,14 @@ namespace WebApp.Controllers
         // index view
         public async Task<IActionResult> Index()
         {
-
             IEnumerable<Landmark> landmarks = new List<Landmark>(); // Initialize to avoid null
-
             try
             {
                 HttpResponseMessage response = await _client.GetAsync("/api/landmarks");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine(response.Content.ReadAsStringAsync());
+                    Debug.WriteLine(response.Content.ReadAsStringAsync());
                     string json = await response.Content.ReadAsStringAsync();
                     landmarks = JsonConvert.DeserializeObject<IEnumerable<Landmark>>(json);
                 }
@@ -44,81 +44,184 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Error fetching states: {e.Message}");
+                Debug.WriteLine($"Error fetching landmarks: {e.Message}");
             }
 
-            Console.WriteLine(landmarks);
+            Debug.WriteLine(landmarks);
             // Ensure a non-null object is always passed to the view
             return View(landmarks ?? new List<Landmark>());
         }
 
-        // GET: LandmarksController/Details/5
-        public ActionResult Details(int id)
+        // Show Landmark Details
+        [HttpGet]
+        public async Task<IActionResult> Details(string landmarkName)
         {
-            return View();
+            if (string.IsNullOrEmpty(landmarkName))
+            {
+                return BadRequest("LandmarkName is required.");
+            }
+
+            var response = await _client.GetAsync($"/api/landmarks/{landmarkName}");
+            if (response.IsSuccessStatusCode)
+            {
+                var landmark = JsonConvert.DeserializeObject<Landmark>(await response.Content.ReadAsStringAsync());
+                return View(landmark); // Render the Details view with the landmark model
+            }
+
+            return NotFound($"Landmark {landmarkName} not found.");
         }
 
-        // GET: LandmarksController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: LandmarksController/Create
+        // Update Landmark 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> UpdateLandmark(Landmark updatedLandmark)
         {
+            if (updatedLandmark == null || string.IsNullOrEmpty(updatedLandmark.LandmarkName))
+            {
+                return BadRequest("Landmark data is invalid.");
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var response = await _client.PutAsJsonAsync($"/api/landmarks/{updatedLandmark.LandmarkName}", updatedLandmark);
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index"); // Redirect after successful update
+                }
+                else
+                {
+                    // Log and handle API errors
+                    Debug.WriteLine($"API Error: {response.StatusCode}");
+                    return BadRequest("Failed to update landmark.");
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Debug.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error.");
             }
         }
 
-        // GET: LandmarksController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: LandmarksController/Edit/5
+        // Patch Landmark
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> PatchLandmark(string landmarkName, string? description, string? location)
         {
+            if (string.IsNullOrEmpty(landmarkName))
+            {
+                return BadRequest("LandmarkName is required.");
+            }
+
+            // Create a JsonPatchDocument
+            var patchDocument = new JsonPatchDocument<Landmark>();
+            if (!string.IsNullOrEmpty(description))
+            {
+                patchDocument.Replace(s => s.Description, description);
+            }
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                patchDocument.Replace(s => s.Location, location);
+            }
+
+            if (patchDocument.Operations.Count == 0)
+            {
+                return BadRequest("No fields to update.");
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                // Send the patch request to the API
+                var response = await _client.PatchAsync(
+                    $"/api/landmarks/{landmarkName}",
+                    new StringContent(JsonConvert.SerializeObject(patchDocument), Encoding.UTF8, "application/json")
+                );
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    Debug.WriteLine($"API Error: {response.StatusCode}");
+                    return BadRequest("Failed to patch landmark.");
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error.");
             }
         }
 
-        // GET: LandmarksController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: LandmarksController/Delete/5
+        // Delete Landmark
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteLandmark(string landmarkName)
         {
+            if (string.IsNullOrEmpty(landmarkName))
+            {
+                return BadRequest("LandmarkName is required.");
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var response = await _client.DeleteAsync($"/api/landmarks/{landmarkName}");
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index"); // Redirect after successful deletion
+                }
+                else
+                {
+                    // Log and handle API errors
+                    Debug.WriteLine($"API Error: {response.StatusCode}");
+                    return BadRequest("Failed to delete landmark.");
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error.");
             }
         }
+
+        //// GET: LandmarksController/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        //// POST: LandmarksController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: LandmarksController/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: LandmarksController/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }

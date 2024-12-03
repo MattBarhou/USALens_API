@@ -1,42 +1,59 @@
-﻿@model IEnumerable<WebApp.Models.Landmark>
+﻿@model List<WebApp.Models.Landmark>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Landmark List";
 }
 
-<div class="text-center">
-    <h3 class="display-6">Landmark List</h3>
-    <hr />
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th class="text-center">Landmark</th>
-                <th class="text-center">State Name</th>
-                <th class="text-center">Location</th>
-                <th class="text-center">Description</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var state in Model)
-            {
+<div class="container mt-5">
+    <!-- Page Title -->
+    <div class="text-center mb-4">
+        <h3 class="display-6 fw-bold">Landmark List</h3>
+        <p class="text-muted">Explore famous landmarks across different states of the USA.</p>
+        <hr class="w-50 mx-auto" />
+    </div>
+
+    <!-- Landmarks Table -->
+    <div class="table-responsive shadow-lg">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
                 <tr>
-                   @*  <td class="text-center">@landmark.StateName</td>
-                    <td>
-                        <a asp-action="Details" asp-route-stateName="@landmark.LandmarkName" class="btn btn-link">
-                            @landmark.LandmarkName
-                        </a>
-                    </td>
-                    <td class="text-center">@landmark.location</td>
-                    <td class="text-center">@landmark.Description</td> *@
-                    <td class="text-center">
-                        <!-- Trigger Modals -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#patchModal">Patch</button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                    </td>
+                    <th class="text-center">Landmark</th>
+                    <th class="text-center">State Name</th>
+                    <th class="text-center">Location</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var landmark in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Details" asp-route-landmarkName="@landmark.LandmarkName" class="btn btn-link text-decoration-none">
+                                    @landmark.LandmarkName
+                                </a>
+                            </td>
+                            <td class="text-center">@landmark.StateName</td>
+                            <td class="text-center">@landmark.Location</td>
+                            <td>@landmark.Description</td>
+                            <td class="text-center">
+                                <!-- Actions -->
+                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#patchModal">Patch</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No landmarks available.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
