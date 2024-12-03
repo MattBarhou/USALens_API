@@ -59,15 +59,6 @@ internal class Program
         // remove headers
         _client.DefaultRequestHeaders.Accept.Clear();
         // add header json
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        await StatesController.GetAllStates();
-        //await StatesController.GetStateById("Tennessee");
-        //await CreateState();
-        //await UpdateLandmark("Lucianna");
-        //await DeleteLandmark("Lucianna");
+        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));        
     }
-
-
-
 }
