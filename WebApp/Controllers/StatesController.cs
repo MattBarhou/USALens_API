@@ -56,38 +56,6 @@ namespace WebApp.Controllers
             return View(states ?? new List<State>());
         }
 
-        //// details view
-
-        //[Route("Home/Details/{stateName}")]
-        //public async Task<IActionResult> Details(string stateName)
-        //{
-        //    var state = await GetStateById(stateName);
-
-        //    return View(state);
-        //}
-
-        // details view
-        [Route("States/EditedDetails")]
-        public async Task<IActionResult> EditedDetails(State state)
-        {
-            return View(state);
-        }
-
-
-        // edit view
-        [Route("States/Edit/{stateName}")]
-        public async Task<IActionResult> Edit(string stateName, [Bind("StateName,Abbreviation,Capital,Population,Area,Region,TimeZones,FlagUrl")] State state)
-        {
-            Debug.WriteLine("ATTEMPT TO EDIT STATE >>>>>>>>>>>>>>>>>>>>>>>" + stateName);
-
-            if (ModelState.IsValid)
-            {
-                await UpdateState(state);
-                Debug.WriteLine("STATE UPDATED >>>>>>>>>>>>>>>>>>>>>>>" + stateName);
-                return RedirectToAction(nameof(EditedDetails), state);
-            }
-            return View(state);
-        }
 
 
         /// =====================  SERVICES  ===================== \\\
