@@ -68,7 +68,7 @@ namespace WebApp.Controllers
                 return View(landmark); // Render the Details view with the landmark model
             }
 
-            return NotFound($"Landmark {landmarkName} not found.");
+            return NotFound($"Landmark '{landmarkName}' not found.");
         }
 
         // Update Landmark 

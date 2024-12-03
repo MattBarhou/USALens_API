@@ -34,7 +34,9 @@ namespace API.Repositories
             }
 
             // Normalize the LandmarkName (capitalize or trim if needed)
-            var normalizedLandmarkName = Helper.CapitalizeLandmarkName(landmarkName);
+            //var normalizedLandmarkName = Helper.CapitalizeLandmarkName(landmarkName);
+            var normalizedLandmarkName = landmarkName;
+
 
             // Query using the sort key (LandmarkName)
             var query = new DynamoDBOperationConfig
