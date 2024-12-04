@@ -28,7 +28,9 @@
                     foreach (var landmark in Model)
                     {
                         // Generate a unique modal ID for each landmark
-                        string modalId = $"editModal-{landmark.LandmarkName.Replace(" ", "-")}";
+                        string editModalId = $"editModal-{landmark.LandmarkName.Replace(" ", "-")}";
+                        string patchModalId = $"patchModal-{landmark.LandmarkName.Replace(" ", "-")}";
+                        string deleteModalId = $"deleteModal-{landmark.LandmarkName.Replace(" ", "-")}";
 
                         <tr>
                             <td>
@@ -38,13 +40,17 @@
                             </td>
                             <td class="text-center">@landmark.Location</td>
                             <td class="text-center">
-                                <!-- Actions -->
-                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@modalId">Edit</button>
+                                <!-- Buttons with unique modal targets -->
+                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@editModalId">Edit</button>
+                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@patchModalId">Patch</button>
+                                @* <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#@deleteModalId">Delete</button> *@
                             </td>
                         </tr>
 
                         <!-- Include Edit Modal for this landmark -->
-                        @await Html.PartialAsync("Partials/EditModal", landmark, new ViewDataDictionary(ViewData) { { "ModalId", modalId } })
+                        @await Html.PartialAsync("Partials/EditModal", landmark, new ViewDataDictionary(ViewData) { { "ModalId", editModalId } })
+                        @await Html.PartialAsync("Partials/PatchModal", landmark, new ViewDataDictionary(ViewData) { { "ModalId", patchModalId } })
+                        @* @await Html.PartialAsync("Partials/DeleteModal", landmark, new ViewDataDictionary(ViewData) { { "ModalId", deleteModalId } }) *@
                     }
                 }
                 else
