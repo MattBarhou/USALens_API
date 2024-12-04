@@ -1,4 +1,4 @@
-﻿@model WebApp.Models.State
+﻿@model WebApp.Models.Landmark
 
 @{
     string modalId = ViewData["ModalId"] as string ?? "editModal";
@@ -8,15 +8,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="@modalId-Label">Delete State</h5>
+                <h5 class="modal-title" id="@modalId-Label">Delete Landmark</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the state <strong>@Model.StateName</strong>?
+                Are you sure you want to delete the landmark <strong>@Model.LandmarkName</strong>?
             </div>
             <div class="modal-footer">
-                <form asp-action="DeleteState" method="post">
-                    <input type="hidden" name="StateName" value="@Model.StateName" />
+                <form asp-action="DeleteLandmark" method="post">
+                    <input type="hidden" name="LandmarkName" value="@Model.LandmarkName" />
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>

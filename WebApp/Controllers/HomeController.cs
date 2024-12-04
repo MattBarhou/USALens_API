@@ -1,21 +1,26 @@
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
 
 namespace WebApp.Controllers;
 
 public class HomeController : Controller
-{
-    private readonly ILogger<HomeController> _logger;
+{    
+    private readonly HttpClient _client;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(HttpClient client)
     {
-        _logger = logger;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _client.BaseAddress = new Uri("https://localhost:7185");
+        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public IActionResult Index()
+    public Task<IActionResult> Index()
     {
-        return View();
+        StatesController statesController = new StatesController(_client);
+        
+        return statesController.Index();
     }
 
     public IActionResult Privacy()

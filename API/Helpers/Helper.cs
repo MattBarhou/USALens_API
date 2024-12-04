@@ -23,6 +23,4 @@ public static class Helper
         var capitalizedWords = words.Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower());
         return string.Join(' ', capitalizedWords);
     }
-
-
 }

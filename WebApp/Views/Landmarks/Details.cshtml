@@ -1,0 +1,40 @@
+﻿@model WebApp.Models.Landmark
+
+<div class="container mt-5">
+    <!-- Page Heading -->
+    <div class="text-center">
+        <h1 class="display-4 fw-bold">Landmark Details</h1>
+        <p class="lead text-secondary">Comprehensive details about the landmark <strong>@Model.LandmarkName</strong>.</p>
+        <hr class="my-4">
+    </div>
+
+    <!-- Landmark Details Section -->
+    <div class="card shadow-lg mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-10">
+                    <h5 class="text-muted">General Information</h5>
+                    <dl class="row">
+                        <dt class="col-sm-5">Landmark Name</dt>
+                        <dd class="col-sm-7">@Model.LandmarkName</dd>
+
+                        <dt class="col-sm-5">State Name</dt>
+                        <dd class="col-sm-7">@Model.StateName</dd>
+
+                        <dt class="col-sm-5">Description</dt>
+                        <dd class="col-sm-7">@Model.Description</dd>
+
+                        <dt class="col-sm-5">Location</dt>
+                        <dd class="col-sm-7">@Model.Location</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary me-3">Close</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Go to Home Page</a>
+    </div>
+</div>

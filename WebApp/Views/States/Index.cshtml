@@ -4,62 +4,70 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">States of the USA</h1>
-    <hr />
-    <img src="images/usa-map.jpg" alt="Map of the USA">
-</div>
+<div class="container mt-5">
+    <!-- Page Header -->
+    <div class="text-center mb-4">
+        <h3 class="display-6 fw-bold">State List</h3>
+        <p class="text-muted">Explore the states of the United States along with their key details.</p>
+        <hr class="w-50 mx-auto" />
+    </div>
 
-<div class="description">
-    <p>
-        The United States of America (USA) has 50 states. It is the second largest country in North America
-        after Canada (largest) and followed by Mexico (third largest). The U.S. has 50 states, a federal
-        district, and five territories. Here is a list of the 50 states.
-    </p>
-</div>
-
-
-<div class="text-center">
-    <h3 class="display-6">List of States</h3>
-    <hr />
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th class="text-center">Flag</th>
-                <th class="text-center">State Name</th>
-                <th class="text-center">Abbreviation</th>
-                <th class="text-center">Capital</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var state in Model)
-            {
+    <!-- State Table -->
+    <div class="table-responsive shadow-lg">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
                 <tr>
-                    <td class="text-center">
-                        <img src="@state.FlagUrl" alt="@state.StateName Flag" width="50">
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-stateName="@state.StateName" class="btn btn-link">
-                            @state.StateName
-                        </a>
-                    </td>
-                    <td class="text-center">@state.Abbreviation</td>
-                    <td class="text-center">@state.Capital</td>
-                    <td class="text-center">
-                        <!-- Trigger Modals -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#patchModal">Patch</button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                    </td>
+                    <th class="text-center">Flag</th>
+                    <th class="text-center">State Name</th>
+                    <th class="text-center">Abbreviation</th>
+                    <th class="text-center">Capital</th>
+                    <th class="text-center">Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var state in Model)
+                    {
+                        // Generate unique modal IDs for each state and action
+                        string editModalId = $"editModal-{state.StateName.Replace(" ", "-")}";
+                        string patchModalId = $"patchModal-{state.StateName.Replace(" ", "-")}";
+                        string deleteModalId = $"deleteModal-{state.StateName.Replace(" ", "-")}";
+
+                        <tr>
+                            <td class="text-center">
+                                <img src="@state.FlagUrl" alt="@state.StateName Flag" width="50">
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-stateName="@state.StateName" class="btn btn-link text-decoration-none">
+                                    @state.StateName
+                                </a>
+                            </td>
+                            <td class="text-center">@state.Abbreviation</td>
+                            <td class="text-center">@state.Capital</td>
+                            <td class="text-center">
+                                <!-- Buttons with unique modal targets -->
+                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@editModalId">Edit</button>
+                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@patchModalId">Patch</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#@deleteModalId">Delete</button>
+                            </td>
+                        </tr>
+
+                        <!-- Include Modals -->
+                        @await Html.PartialAsync("Partials/EditModal", state, new ViewDataDictionary(ViewData) { { "ModalId", editModalId } })
+                        @await Html.PartialAsync("Partials/PatchModal", state, new ViewDataDictionary(ViewData) { { "ModalId", patchModalId } })
+                        @await Html.PartialAsync("Partials/DeleteModal", state, new ViewDataDictionary(ViewData) { { "ModalId", deleteModalId } })
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No states available.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @* <a asp-controller="States" asp-action="Create" class="btn btn-success mb-4 ms-4">Add New State</a> *@
 </div>
-
-<!-- Include Modals -->
-@await Html.PartialAsync("Partials/EditModal", Model.FirstOrDefault())
-@await Html.PartialAsync("Partials/PatchModal", Model.FirstOrDefault())
-@await Html.PartialAsync("Partials/DeleteModal", Model.FirstOrDefault())
-

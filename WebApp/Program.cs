@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.JsonPatch;
 
 internal class Program
 {
-    // _client instance
+    // client instance
     public static HttpClient _client = new HttpClient();
+    // initialize controllers
+    public static HomeController HomeController = new HomeController(_client);
 
-    public static StatesController StatesController = new StatesController(_client);
 
     private static async Task Main(string[] args)
     {
@@ -34,7 +35,6 @@ internal class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
@@ -59,15 +59,6 @@ internal class Program
         // remove headers
         _client.DefaultRequestHeaders.Accept.Clear();
         // add header json
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        await StatesController.GetAllStates();
-        //await StatesController.GetStateById("Tennessee");
-        //await CreateState();
-        //await UpdateState("Lucianna");
-        //await DeleteState("Lucianna");
+        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));        
     }
-
-    
-
 }

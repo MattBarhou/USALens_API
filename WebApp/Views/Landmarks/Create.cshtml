@@ -1,0 +1,29 @@
+﻿@model WebApp.Models.Landmark
+
+@{
+    ViewData["Title"] = "Add Landmark";
+}
+
+<div class="container mt-5">
+    <h3 class="mb-4">Add a New Landmark</h3>
+    <form asp-action="CreateLandmark" method="post">
+        <div class="mb-3">
+            <label for="StateName" class="form-label">State Name</label>
+            <input type="text" class="form-control" id="StateName" name="StateName" required />
+        </div>
+        <div class="mb-3">
+            <label for="LandmarkName" class="form-label">Landmark Name</label>
+            <input type="text" class="form-control" id="LandmarkName" name="LandmarkName" required />
+        </div>
+        <div class="mb-3">
+            <label for="Description" class="form-label">Description</label>
+            <textarea class="form-control" id="Description" name="Description" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="Location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="Location" name="Location" />
+        </div>
+        <button type="submit" class="btn btn-primary">Add Landmark</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
