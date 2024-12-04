@@ -1,0 +1,42 @@
+﻿@model WebApp.Models.State
+
+<div class="container mt-5">
+    <h3 class="mb-4">Add a New State</h3>
+    <form asp-action="CreateState" method="post">
+        <div class="mb-3">
+            <label for="StateName" class="form-label">State Name</label>
+            <input type="text" class="form-control" id="StateName" name="StateName" required />
+        </div>
+        <div class="mb-3">
+            <label for="Abbreviation" class="form-label">Abbreviation</label>
+            <input type="text" class="form-control" id="Abbreviation" name="Abbreviation" required />
+        </div>
+        <div class="mb-3">
+            <label for="Capital" class="form-label">Capital</label>
+            <input class="form-control" id="Capital" name="Capital"></input>
+        </div>
+        <div class="mb-3">
+            <label for="Population" class="form-label">Population</label>
+            <input type="number" class="form-control" id="Population" name="Population" />
+        </div>
+        <div class="mb-3">
+            <label for="Area" class="form-label">Area</label>
+            <input type="text" class="form-control" id="Area" name="Area" />
+        </div>
+        <div class="mb-3">
+            <label for="Region" class="form-label">Region</label>
+            <input type="text" class="form-control" id="Region" name="Region" />
+        </div>
+        <div class="mb-3">
+            <label for="TimeZones" class="form-label">Time Zones</label>
+            <input type="text" class="form-control" id="TimeZones" name="TimeZones" placeholder="Comma separated e.g., Eastern, Pacific" />
+        </div>
+        <div class="mb-3">
+            <label for="FlagUrl" class="form-label">Flag Url</label>
+            <input type="text" class="form-control" id="FlagUrl" name="FlagUrl" />
+            <small class="form-text text-muted">Example: http://www.example.com/index.html</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Add State</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

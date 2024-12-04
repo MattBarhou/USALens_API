@@ -54,7 +54,47 @@ namespace WebApp.Controllers
             Console.WriteLine(states);
             // Ensure a non-null object is always passed to the view
             return View(states ?? new List<State>());
-        }   
+        }
+
+        // GET: StatesController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // Create a new state
+        [HttpPost]
+        public async Task<IActionResult> CreateState(State newState)
+        {
+            if (newState == null || string.IsNullOrEmpty(newState.StateName))
+            {
+                return BadRequest("State data is invalid.");
+            }
+
+            try
+            {
+                // Send a POST request to the API with the new state
+                var response = await _client.PostAsJsonAsync("/api/states", newState);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("STATE CREATED SUCCESSFULLY");
+                    return RedirectToAction("Index"); // Redirect to the index view
+                }
+                else
+                {
+                    // Log and handle API errors
+                    Console.WriteLine($"API Error: {response.StatusCode}");
+                    return BadRequest("Failed to create state.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
 
 
         // GET ALL STATES

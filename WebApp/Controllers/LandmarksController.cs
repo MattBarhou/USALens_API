@@ -52,6 +52,46 @@ namespace WebApp.Controllers
             return View(landmarks ?? new List<Landmark>());
         }
 
+        // GET: LandmarksController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+
+        // Create Landmark
+        [HttpPost]
+        public async Task<IActionResult> CreateLandmark(Landmark newLandmark)
+        {
+            if (newLandmark == null || string.IsNullOrEmpty(newLandmark.LandmarkName))
+            {
+                return BadRequest("Landmark data is invalid.");
+            }
+
+            try
+            {
+                // Send the POST request to the API
+                var response = await _client.PostAsJsonAsync("/api/landmarks", newLandmark);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine("LANDMARK CREATED");
+                    return RedirectToAction("Index"); // Redirect to the list after successful creation
+                }
+                else
+                {
+                    // Log and handle API errors
+                    Debug.WriteLine($"API Error: {response.StatusCode}");
+                    return BadRequest("Failed to create landmark.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
         // Show Landmark Details
         [HttpGet]
         public async Task<IActionResult> Details(string landmarkName)
@@ -182,47 +222,6 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
-
-        //// GET: LandmarksController/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: LandmarksController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: LandmarksController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: LandmarksController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+                
     }
 }
