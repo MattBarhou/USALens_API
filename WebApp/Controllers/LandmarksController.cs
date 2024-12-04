@@ -85,6 +85,7 @@ namespace WebApp.Controllers
                 var response = await _client.PutAsJsonAsync($"/api/landmarks/{updatedLandmark.LandmarkName}", updatedLandmark);
                 if (response.IsSuccessStatusCode)
                 {
+                    Debug.WriteLine("LANDMARK UPDATED");
                     return RedirectToAction("Index"); // Redirect after successful update
                 }
                 else

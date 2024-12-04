@@ -27,8 +27,13 @@
             <tbody>
                 @if (Model != null && Model.Any())
                 {
-                    foreach (var state in Model)
+                    @foreach (var state in Model)
                     {
+                        // Generate unique modal IDs for each state and action
+                        string editModalId = $"editModal-{state.StateName.Replace(" ", "-")}";
+                        string patchModalId = $"patchModal-{state.StateName.Replace(" ", "-")}";
+                        string deleteModalId = $"deleteModal-{state.StateName.Replace(" ", "-")}";
+
                         <tr>
                             <td class="text-center">
                                 <img src="@state.FlagUrl" alt="@state.StateName Flag" width="50">
@@ -41,13 +46,19 @@
                             <td class="text-center">@state.Abbreviation</td>
                             <td class="text-center">@state.Capital</td>
                             <td class="text-center">
-                                <!-- Action Buttons -->
-                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#patchModal">Patch</button>
-                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                <!-- Buttons with unique modal targets -->
+                                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@editModalId">Edit</button>
+                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#@patchModalId">Patch</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#@deleteModalId">Delete</button>
                             </td>
                         </tr>
+
+                        <!-- Include Modals -->
+                        @await Html.PartialAsync("Partials/EditModal", state, new ViewDataDictionary(ViewData) { { "ModalId", editModalId } })
+                        @await Html.PartialAsync("Partials/PatchModal", state, new ViewDataDictionary(ViewData) { { "ModalId", patchModalId } })
+                        @await Html.PartialAsync("Partials/DeleteModal", state, new ViewDataDictionary(ViewData) { { "ModalId", deleteModalId } })
                     }
+
                 }
                 else
                 {
@@ -59,8 +70,3 @@
         </table>
     </div>
 </div>
-
-<!-- Include Modals -->
-@await Html.PartialAsync("Partials/EditModal", Model.FirstOrDefault())
-@await Html.PartialAsync("Partials/PatchModal", Model.FirstOrDefault())
-@await Html.PartialAsync("Partials/DeleteModal", Model.FirstOrDefault())
