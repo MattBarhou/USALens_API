@@ -33,7 +33,7 @@ namespace API.Repositories
             }
 
             //Convert to uppercase
-            var normalizedStateName = Helper.CapitalizeStateName(stateName);
+            var normalizedStateName = stateName;
 
             // Query using the partition key (StateName)
             var query = new DynamoDBOperationConfig
@@ -88,7 +88,7 @@ namespace API.Repositories
                 throw new ArgumentException("StateName must be provided.");
             }
 
-            var normalizedState = Helper.CapitalizeStateName(stateName);
+            var normalizedState = stateName;
 
             // Query to get the item by StateName
             var queryConfig = new DynamoDBOperationConfig
