@@ -12,7 +12,7 @@ public class HomeController : Controller
     public HomeController(HttpClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
-        _client.BaseAddress = new Uri("https://localhost:7185");
+        _client.BaseAddress = new Uri("https://localhost:8081");
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 

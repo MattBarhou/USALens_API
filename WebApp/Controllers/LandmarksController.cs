@@ -18,7 +18,7 @@ namespace WebApp.Controllers
             _client = client;
             _client = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:7185")
+                BaseAddress = new Uri("https://localhost:8081")
             };
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

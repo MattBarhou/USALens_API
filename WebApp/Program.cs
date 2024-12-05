@@ -55,7 +55,7 @@ internal class Program
     async static Task RunAsync() 
     {
         // set the base address of the _client
-        _client.BaseAddress = new Uri("https://localhost:7185");
+        _client.BaseAddress = new Uri("https://localhost:8081");
         // remove headers
         _client.DefaultRequestHeaders.Accept.Clear();
         // add header json
